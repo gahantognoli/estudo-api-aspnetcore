@@ -22,7 +22,8 @@ namespace DevIO.Api.Controllers
         private readonly IHostingEnvironment _hostingEnvironment;
 
         public ProdutosController(IProdutoRepository produtoRepository, IProdutoService produtoService, 
-            IMapper mapper, INotificador notificador, IHostingEnvironment hostingEnvironment) : base(notificador)
+            IMapper mapper, INotificador notificador, IHostingEnvironment hostingEnvironment,
+            IUser appUser) : base(notificador, appUser)
         {
             _produtoRepository = produtoRepository;
             _produtoService = produtoService;
