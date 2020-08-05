@@ -13,7 +13,8 @@ using System.Threading.Tasks;
 
 namespace DevIO.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
+    [ApiVersion("1.0")]
     public class ProdutosController : MainController
     {
         private readonly IProdutoRepository _produtoRepository;

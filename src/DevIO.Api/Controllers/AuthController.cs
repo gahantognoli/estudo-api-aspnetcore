@@ -3,6 +3,7 @@ using DevIO.Api.ViewModels;
 using DevIO.Business.Intefaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -14,20 +15,23 @@ using System.Threading.Tasks;
 
 namespace DevIO.Api.Controllers
 {
-    [Route("api")]
+    [Route("api/v{version:apiVersion}")]
+    [ApiVersion("1.0")]
     public class AuthController : MainController
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly AppSettings _appSettings;
+        private readonly ILogger _logger;
 
         public AuthController(SignInManager<IdentityUser> signInManager,
             UserManager<IdentityUser> userManager, IOptions<AppSettings> appSettings,
-            INotificador notificador, IUser appUser) : base(notificador, appUser)
+            INotificador notificador, IUser appUser, ILogger<AuthController> logger) : base(notificador, appUser)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _appSettings = appSettings.Value;
+            _logger = logger;
         }
 
         [HttpPost("entrar")]
@@ -40,6 +44,7 @@ namespace DevIO.Api.Controllers
 
             if (result.Succeeded)
             {
+                _logger.LogInformation($"Usuário {loginUser.Email} logado com sucesso");
                 return CustomResponse(await GerarJwt(loginUser.Email));
             }
 
